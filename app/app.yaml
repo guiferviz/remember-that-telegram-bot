@@ -1,6 +1,6 @@
 
-application: YOUR-APP-ID-HERE
-version: YOUR-VERSION-HERE
+application: your-app-id-here
+version: your-version-here
 runtime: python27
 api_version: 1
 threadsafe: true
