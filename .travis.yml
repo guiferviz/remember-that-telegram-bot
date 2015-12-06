@@ -1,0 +1,45 @@
+
+language: python
+python:
+- "2.7"
+
+env:
+  global:
+    - APP_DIR=app
+    - LIB_DIR=$APP_DIR/lib
+    - GAE_SDK_VERSION="1.9.30"
+    # In the travis environment must be the next variables:
+    # APP_ID: AppEngine application ID.
+    # APP_VERSION: AppEngine version of the deploy.
+    # APP_TOKEN: Refresh token of your Google account, that can be obtainde from
+    # ~/.appcfg_oauth2_tokens local file. Copy "refresh_token" value entry.
+    # TELEGRAM_TOKEN: token of your telegram bot.
+
+before_install:
+# Install Google AppEngine Python SDK.
+# Not installed in the LIB_DIR to avoid include it in the deploy.
+- wget https://storage.googleapis.com/appengine-sdks/featured/google_appengine_$GAE_SDK_VERSION.zip -nv
+- unzip -q google_appengine_$GAE_SDK_VERSION.zip
+- export GAE_PATH="$(pwd)/google_appengine"
+- export PYTHONPATH=$GAE_PATH:$PYTHONPATH
+- export PATH=$GAE_PATH:$PATH
+
+install:
+# Install Python dependencies (using pip).
+- pip install --upgrade --target=$LIB_DIR -r dev_requirements.txt
+
+before_script:
+# Put secret tokens in the code.
+# Replaces YOUR-BOT-TOKEN-GOES-HERE string in the file by the value of env var TELEGRAM_TOKEN.
+- sed -Ei "s/YOUR-BOT-TOKEN-GOES-HERE/$TELEGRAM_TOKEN/g" $APP_DIR/telegram_token.py
+
+script:
+# Run all tests
+- python test_suite.py
+
+after_success:
+# Removing dev requirements and installing production requirements.
+- rm -r app/lib
+- pip install --upgrade --target=$LIB_DIR -r requirements.txt
+# Deploy
+- appcfg.py --oauth2_refresh_token=$APP_TOKEN --application=$APP_ID --version=$APP_VERSION update $APP_DIR

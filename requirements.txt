@@ -1,0 +1,7 @@
+# This requirements file lists all dependencies for this project.
+#
+# Run "pip install --upgrade --target=app/lib -r requirements.txt" to install these dependencies
+# in this project's app/lib/ directory.  The "lib" directory is added to "sys.path"
+# by "appengine_config.py".
+
+python-telegram-bot
