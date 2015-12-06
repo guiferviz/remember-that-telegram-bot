@@ -21,6 +21,13 @@ BOT = telegram.Bot(token=telegram_token.TOKEN)
 # Url that receives bot messages.
 BOT_URL = '/remember-that'
 
+# Help text that is send when /start, /help or unknow command arrives.
+HELP_TXT = "For **scheduling** alarms you can use any of next commands::\n"\
+         + "/set at HH:MM Alarm name\n"\
+         + "/set each HH:MM Alarm name\n"\
+         + "For **deleting** alarms use:\n"\
+         + "/delete all\n"
+
 
 class BotHandler(webapp2.RequestHandler):
 
@@ -56,16 +63,16 @@ class BotHandler(webapp2.RequestHandler):
 
 def text_received(chat_id, text):
     text = text.lower()
-    if text.startswith("/start") or text.startswith("/help"):
-        # TODO: send help
-        pass
-    elif text.startswith("/set"):
+    if text.startswith("/set"):
         SchedulerService.process_task(text)
-        pass
     elif text.startswith("/delete all"):
         pass
     elif text.startswith("/delete"):
         pass
+    else:  # text.startswith("/start") or text.startswith("/help")
+        BOT.sendText(chat_id=chat_id,
+                     text=HELP_TXT,
+                     parse_mode=telegram.ParseMode.MARKDOWN)
 
 
 app = webapp2.WSGIApplication([
