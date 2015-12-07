@@ -7,6 +7,7 @@ class Forgetful(db.Model):
 
     id = db.IntegerProperty()
     last_use = db.DateTimeProperty(auto_now=True)
+    text = db.StringProperty(required=True)
 
 
 class ForgetfulDTO(object):

@@ -1,6 +1,7 @@
 
 from datetime import datetime
 import logging
+import time
 import re
 
 from nltk.tokenize.regexp import RegexpTokenizer
@@ -19,14 +20,20 @@ TOKENIZER = RegexpTokenizer('[^ ]+')
 
 class SchedulerService():
 
+    def create_task(cls, chat_id, time, text, next_time):
+        pass
+
+
+class ParserService():
+
     @classmethod
-    def process_task(cls, text):
+    def parse_command(cls, text):
         try:
             tokens = TOKENIZER.tokenize(text)
             if RE_SET.match(tokens[0].lower()):
-                SchedulerService._process_set_task(tokens[1:])
+                ParserService._process_set_task(tokens[1:])
             elif RE_DELETE.match(tokens[0]):
-                SchedulerService._process_delete_task(tokens[1:])
+                ParserService._process_delete_task(tokens[1:])
             return True
         except TimeException as e:
             logging.error(e)
@@ -35,7 +42,7 @@ class SchedulerService():
     @classmethod
     def _process_set_task(cls, tokens):
         if RE_AT.match(tokens[0].lower()):
-            time = SchedulerService._get_hour_minutes(tokens[1])
+            time = ParserService._get_hour_minutes(tokens[1])
             text = " ".join(tokens[2:])[:100]
             logging.info("Setting alarm at {}:{} with text \"{}\"".format(
                 time.hour, time.minute, text))
