@@ -53,6 +53,7 @@ class AppEngineTestBase(unittest.TestCase):
         self.testbed = testbed.Testbed()
         self.testbed.activate()
         # TODO: mock services with self.testbed.init_X_stub()
+        self.testbed.init_taskqueue_stub()
         # Create app for testing handlers.
         self.testapp = webtest.TestApp(main.app)
         # Not showing logging.
