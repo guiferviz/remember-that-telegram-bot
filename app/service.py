@@ -1,10 +1,13 @@
 
 from datetime import datetime
 import logging
-import time
 import re
 
+from google.appengine.ext import deferred
+
 from nltk.tokenize.regexp import RegexpTokenizer
+
+import main
 
 
 # REGULAR EXPRESSIONS for parse commands.
@@ -27,28 +30,31 @@ class SchedulerService():
 class ParserService():
 
     @classmethod
-    def parse_command(cls, text):
+    def parse_command(cls, chat_id, text):
         try:
             tokens = TOKENIZER.tokenize(text)
             if RE_SET.match(tokens[0].lower()):
-                ParserService._process_set_task(tokens[1:])
+                ParserService._process_set_task(chat_id, tokens[1:])
             elif RE_DELETE.match(tokens[0]):
-                ParserService._process_delete_task(tokens[1:])
+                ParserService._process_delete_task(chat_id, tokens[1:])
             return True
         except TimeException as e:
             logging.error(e)
             return False
 
     @classmethod
-    def _process_set_task(cls, tokens):
+    def _process_set_task(cls, chat_id, tokens):
         if RE_AT.match(tokens[0].lower()):
             time = ParserService._get_hour_minutes(tokens[1])
             text = " ".join(tokens[2:])[:100]
             logging.info("Setting alarm at {}:{} with text \"{}\"".format(
                 time.hour, time.minute, text))
+            tdelta = time - time.now()
+            if tdelta.seconds > 0:
+                deferred.defer(_send_alarm, chat_id, text, _countdown=tdelta.seconds)
 
     @classmethod
-    def _process_delete_task(cls, tokens):
+    def _process_delete_task(cls, chat_id, tokens):
         pass
 
     @classmethod
@@ -77,3 +83,8 @@ class TimeException(Exception):
 
     def __str__(self):
         return repr(self.value)
+
+
+def _send_alarm(chat_id, text):
+    print "Enviando esoooooo"
+    main.BOT.sendMessage(chat_id, text)

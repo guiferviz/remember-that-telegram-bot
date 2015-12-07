@@ -12,7 +12,7 @@ from google.appengine.api import app_identity
 import telegram
 
 import telegram_token
-from service import SchedulerService
+from service import ParserService
 
 
 # Creating the bot.
@@ -62,12 +62,9 @@ class BotHandler(webapp2.RequestHandler):
 
 
 def text_received(chat_id, text):
-    if text.startswith("/set"):
-        SchedulerService.process_task(text)
-    elif text.startswith("/delete all"):
-        pass
-    elif text.startswith("/delete"):
-        pass
+    if ParserService.parse_command(chat_id, text):
+        BOT.sendMessage(chat_id=chat_id,
+                        text="Vale, te avisare")
     else:  # text.startswith("/start") or text.startswith("/help")
         BOT.sendMessage(chat_id=chat_id,
                         text=HELP_TXT,
