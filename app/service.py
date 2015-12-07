@@ -35,12 +35,13 @@ class ParserService():
             tokens = TOKENIZER.tokenize(text)
             if RE_SET.match(tokens[0].lower()):
                 ParserService._process_set_task(chat_id, tokens[1:])
+                return True
             elif RE_DELETE.match(tokens[0]):
                 ParserService._process_delete_task(chat_id, tokens[1:])
-            return True
+                return True
         except TimeException as e:
             logging.error(e)
-            return False
+        return False
 
     @classmethod
     def _process_set_task(cls, chat_id, tokens):
