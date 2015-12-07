@@ -62,7 +62,6 @@ class BotHandler(webapp2.RequestHandler):
 
 
 def text_received(chat_id, text):
-    text = text.lower()
     if text.startswith("/set"):
         SchedulerService.process_task(text)
     elif text.startswith("/delete all"):
