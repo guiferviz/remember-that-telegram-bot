@@ -32,6 +32,9 @@ HELP_TXT = "For *scheduling* alarms you can use any of next commands:\n"\
 # Confirmation text.
 OK_TXT = "OK, I'll alert you."
 
+# Delete all successfully.
+DELETE_ALL_TXT = "All alarms deleted."
+
 
 class BotHandler(webapp2.RequestHandler):
 

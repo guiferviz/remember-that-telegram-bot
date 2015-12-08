@@ -74,6 +74,8 @@ class ParserService():
         """
         q = taskqueue.Queue('default')
         q.purge()
+        main.BOT.sendMessage(chat_id, main.DELETE_ALL_TXT)
+        return True
 
     @classmethod
     def _get_seconds(cls, text):
