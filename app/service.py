@@ -56,6 +56,7 @@ class ParserService():
             if tdelta.seconds > 0:
                 logging.info("I'll alert you in {} seconds from now.".format(tdelta.seconds))
                 deferred.defer(_send_alarm, chat_id, text, 0, _countdown=tdelta.seconds)
+                main.BOT.sendMessage(chat_id, main.OK_TXT)
                 return True
         elif RE_EACH.match(tokens[0].lower()):
             time = ParserService._get_seconds(tokens[1])
@@ -63,6 +64,7 @@ class ParserService():
             logging.info("Setting alarm in {} seconds with text \"{}\"".format(time, text))
             logging.info("I'll alert you in {} seconds from now.".format(time))
             deferred.defer(_send_alarm, chat_id, text, time, _countdown=time)
+            main.BOT.sendMessage(chat_id, main.OK_TXT)
             return True
         return False
 

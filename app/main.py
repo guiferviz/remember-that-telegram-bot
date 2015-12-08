@@ -69,10 +69,7 @@ class BotHandler(webapp2.RequestHandler):
 
 
 def text_received(chat_id, text):
-    if ParserService.parse_command(chat_id, text):
-        BOT.sendMessage(chat_id=chat_id,
-                        text=OK_TXT)
-    else:  # text.startswith("/start") or text.startswith("/help")
+    if not ParserService.parse_command(chat_id, text):
         BOT.sendMessage(chat_id=chat_id,
                         text=HELP_TXT,
                         parse_mode=telegram.ParseMode.MARKDOWN)
