@@ -24,9 +24,13 @@ BOT_URL = '/remember-that'
 # Help text that is send when /start, /help or unknow command arrives.
 HELP_TXT = "For *scheduling* alarms you can use any of next commands:\n"\
          + "_/set at HH:MM Alarm name_\n"\
-         + "_/set each HH:MM Alarm name_\n"\
+         + "_/set each MMm Alarm name_\n"\
+         + "_/set each SSs Alarm name_\n"\
          + "For *deleting* alarms use:\n"\
          + "_/delete all_\n"
+
+# Confirmation text.
+OK_TXT = "OK, I'll alert you."
 
 
 class BotHandler(webapp2.RequestHandler):
@@ -64,7 +68,7 @@ class BotHandler(webapp2.RequestHandler):
 def text_received(chat_id, text):
     if ParserService.parse_command(chat_id, text):
         BOT.sendMessage(chat_id=chat_id,
-                        text="Vale, te avisare")
+                        text=OK_TXT)
     else:  # text.startswith("/start") or text.startswith("/help")
         BOT.sendMessage(chat_id=chat_id,
                         text=HELP_TXT,
